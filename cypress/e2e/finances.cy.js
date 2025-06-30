@@ -1,64 +1,43 @@
-/// <reference types= "cypress" />
+/// <reference types= "cypress" />  
 
 describe('Dev Finances Agilizei', () => {
+  beforeEach(() => {
+    cy.visit('https://dev-finance.netlify.app');
+  });
 
-    it('Cadastrar entradas', () => {
-        // - enterder o fluxo manualmente
-        // - mapear os elementos que vamos interagir
-        // - descrever as interações com cypress
-        // - adicionar as asserções que a gente precisa
-       
-        
-        cy.visit('https://dev-finance.netlify.app')
-        cy.get('#data-table tbody tr').should('have.length', 0 )
-        
-        cy.get('#transaction .button').click()
-        cy.get('#description').type('Mesada')
-        cy.get('[name=amount]').type(50)
-        cy.get('[type=date]').type('2025-06-27')
-        cy.get('button').contains('Salvar').click()
+  it('Cadastrar e remover entrada e saída', () => {
+    const entrada = 'Mesada';
+    const saida = 'Presente';
 
-        cy.get('#data-table tbody tr').should('have.length', 1 )
+    // Cadastrar entrada
+    cy.get('a.button.new').should('be.visible').click();
+    cy.get('#description').type(entrada);
+    cy.get('[name=amount]').type(150);
+    cy.get('[type=date]').type('2025-06-27');
+    cy.get('button').contains('Salvar').click();
 
+    // Cadastrar saída
+    cy.get('a.button.new').should('be.visible').click();
+    cy.get('#description').type(saida);
+    cy.get('[name=amount]').type(-30);
+    cy.get('[type=date]').type('2025-06-28');
+    cy.get('button').contains('Salvar').click();
 
-    });
+    // Remover entrada
+    cy.contains(entrada)
+  .closest('tr') // pega a linha correta
+  .find('img[onclick*=remove]')
+  .click();
 
-    it('Cadastrar saídas', () => {
-        
-        cy.visit('https://dev-finance.netlify.app')
-        cy.get('#data-table tbody tr').should('have.length', 0 )
-        
-        cy.get('#transaction .button').click()
-        cy.get('#description').type('Presente')
-        cy.get('[name=amount]').type(-12)
-        cy.get('[type=date]').type('2025-06-30')
-        cy.get('button').contains('Salvar').click()
-
-        cy.get('#data-table tbody tr').should('have.length', 1 )
-
-
-    })
-    it('Remover entradas e saídas', () => {
-        const entrada = 'Mesada'
-        const saída = 'Presente'
-
-           cy.get('#transaction .button').click()
-           cy.get('#description').type(entrada)
-           cy.get('[name=amount]').type(50)
-           cy.get('[type=date]').type('2025-06-27')
-           cy.get('button').contains('Salvar').click()
+  // Remover saída
+    cy.contains(saida)
+  .closest('tr')
+  .find('img[onclick*=remove]')
+  .click();
 
 
-        cy.get('#transaction .button').click()
-        cy.get('#description').type(saída)
-        cy.get('[name=amount]').type(-12)
-        cy.get('[type=date]').type('2025-06-30')
-        cy.get('button').contains('Salvar').click()
-
-        cy.contains(entrada)
-          .parent()
-          .find(img[onclick*=remove])
-          .click()
-
-    });
+    // Verificar que a tabela ficou vazia
+    cy.get('#data-table tbody tr').should('have.length', 0);
+  });
 });
+
