@@ -21,8 +21,4 @@ A automação foi feita com Cypress e cobre funcionalidades básicas do sistema.
 - Visual Studio Code
 
 
-
-📄 [Clique aqui para abrir o portfólio em PDF](./Portfolio_Ana_Paula_QA_Agilizei.pdf)
-
-
 Este portfólio mostra o projeto de automação realizado com Cypress após o curso da Agilizei.
